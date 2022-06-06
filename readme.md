@@ -2,7 +2,7 @@
 
 <p align="center">
   <img 
-    width="300"
+    width="600"
     src="img/menu.png"
   >
 </p>
