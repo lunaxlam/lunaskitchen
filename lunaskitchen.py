@@ -30,10 +30,10 @@ def draw_border():
 def welcome():
     """greet user"""
 
-    print("")
-    print(("\U0001F319 " * 3) + " Welcome to Luna's Kitchen " +
-          (" \U0001F319" * 3))  # \U000 allows for emoji printing via unicode
-    draw_border()  # creates a decorative border
+    print()
+    print(("\U0001F319 " * 3) + " Welcome to Luna's Kitchen " + (" \U0001F319" * 3))  
+    
+    draw_border() 
 
 
 def display_menu():
@@ -50,7 +50,7 @@ def display_menu():
 def select_menu():
     """validate user input based on navigation options per display_menu()"""
 
-    # call display_menu() function to display navigation options to user
+    # display navigation options to user
     display_menu()
 
     # prompt user for menu selection and store input into variable
@@ -68,8 +68,7 @@ def select_menu():
 def say_goodbye():
     """thank and wish the user goodbye"""
 
-    print(("\U0001F319 ") + " Thanks for visiting Luna's Kitchen! Goodbye. " +
-          (" \U0001F319"))
+    print(("\U0001F319 ") + " Thanks for visiting Luna's Kitchen! Goodbye. " + (" \U0001F319"))
     print("")
 
 
@@ -89,10 +88,11 @@ def get_URL():
     ingredients = ingredient.split()  
 
     # create a query string base URl variable to store into the URL variable to later pass as argument for requests.get() method to scrape web page info
-    url = "https://www.allrecipes.com/search/results/?search="  # query string base URL will be used to pass through requests.get() method
+    # query string base URL will be used to pass through requests.get() method
+    url = "https://www.allrecipes.com/search/results/?search="  
 
     # concatenate each list elements of the ingredient variable with the URL variable to generate the final URL variable
-    for ingredient in ingredients:  # concatenates each ingredient element to base URL to complete URL
+    for ingredient in ingredients: 
         url = url + ingredient + "+"
 
     # final query string URL variable
@@ -108,28 +108,22 @@ def get_URL():
 
 
 def find_all_recipes():
-    """locate all recipe matches based on user input from get_URL() function by using BeautifulSoup methods to locate page elements; stores results of findings into global variables to use in other functions"""
+    """locate all recipe matches from get_URL() function by using BeautifulSoup methods to locate page elements and store results of findings into global variables to use in other functions"""
 
     # call the get_URL() function and assign return results to url variable to use in requests.get() method
     url = get_URL()
 
     # call the requests.get() method on the URL variable to initiate HTTP GET request
-    result = requests.get(
-        url
-    )  # sends HTTP GET request to URL to scrape, responding with HTML content of page
+    result = requests.get(url) 
 
     # create a doc variable and call the BeautifulSoup function on the result variable to parse the HTML elements of the page
-    doc = BeautifulSoup(
-        result.text,
-        "html.parser")  # fetches and parses the HTML content data as text
+    doc = BeautifulSoup(result.text, "html.parser")  # fetches and parses the HTML content data as text
 
     # set a recipe_title variable as a global variable so display_recipes() and view_recipe()functions can call it later
     global recipe_title
 
     # create a recipe_title variable and call the .find_all() method on the doc variable to locate all matching titles of the recipe by analyzing tag and attribtue elements. Store the result in recipe_title
-    recipe_title = doc.find_all(
-        "h3", class_="card__title"
-    )  # analyzes h3 tag and class attributes to extract specified data
+    recipe_title = doc.find_all("h3", class_="card__title") 
 
     # set a recipe_summary variable as a global variable so other functions can display_recipes() function and view_recipe() function can call it later
     global recipe_summary
@@ -141,9 +135,7 @@ def find_all_recipes():
     global recipe_link
 
     # create a recipe_link variable and call the .find_all() method on the doc variable to locate all matching links of the recipe by analyzing tag and attribute elements. Store the result in recipe_link
-    recipe_link = doc.find_all(
-        "a", class_="card__titleLink", href=True
-    )  # if using.find() method, add ["href"] at the end to retrieve only link
+    recipe_link = doc.find_all("a", class_="card__titleLink", href=True)  # if using.find() method, add ["href"] at the end to retrieve only link
 
     # create "new_" lists to temporarily store by appending text only/no HTML element versions for each recipe info return
     new_recipe_title = []
@@ -152,8 +144,7 @@ def find_all_recipes():
 
     # iterate through each recipe info link to return text and eliminate leading and trailing white spaces. append the results to the temporary lists and then reassign to original variables for consistency
     for recipe in recipe_title:
-        recipe = recipe.get_text().strip().upper(
-        )  # .get_text() method allows us to pull only the text and no HTML tag elements; .strip() returns result without any leading or trailing whitespaces; .upper() returns the result in all uppercase
+        recipe = recipe.get_text().strip().upper()  # .get_text() method allows us to pull only the text and no HTML tag elements; .strip() returns result without any leading or trailing whitespaces; .upper() returns the result in all uppercase
         new_recipe_title.append(recipe)
         recipe_title = new_recipe_title
 
@@ -198,9 +189,7 @@ def display_recipes():
 
         # ask user for input for how many recipes to display in console
         display_count = int(
-            input(
-                f"How many recipes would you like to view? Enter a number, 0 to {total_recipe_count}. \n> "
-            ))
+            input(f"How many recipes would you like to view? Enter a number, 0 to {total_recipe_count}. \n> "))
         print()
         print()
 
@@ -242,9 +231,7 @@ def view_recipe():
     # create an endless loop asking the following until the user quits the program; use while True
     while True:
         # ask user if they would like to view recipe details
-        view_recipe = input(
-            "Would you like to view a specific recipe? Enter yes or no: \n> "
-        ).lower().strip()
+        view_recipe = input("Would you like to view a specific recipe? Enter yes or no: \n> ").lower().strip()
         print()
 
         # if user says "no" to viewing recipe:
@@ -269,10 +256,8 @@ def find_recipe():
 
     while True:
         # ask user to confirm recipe number for look-up
-        recipe_number = int(
-            input(
-                f"Please enter recipe number, between Recipe #1 to Recipe #{display_count}: \n> "
-            ))
+        recipe_number = int(input(f"Please enter recipe number, between Recipe #1 to Recipe #{display_count}: \n> "))
+
         print()
 
         # validate user input
@@ -294,28 +279,20 @@ def find_recipe():
             global my_recipe_title
 
             # use .find() method to locate the recipe title info of the recipe by analyzing tag and attribute elements. Store the result into my_recipe_title
-            my_recipe_title = recipe_doc.find(
-                "h1",
-                class_="headline heading-content elementFont__display").text
+            my_recipe_title = recipe_doc.find("h1", class_="headline heading-content elementFont__display").text
 
             # create a recipe_servings variable and use .find() method to locate the servings info of the recipe by analyzing tag and attribute elements. Store the result into recipe_servings
-            recipe_servings = recipe_doc.find(
-                "div",
-                class_="recipe-adjust-servings__original-serving").string
+            recipe_servings = recipe_doc.find("div", class_="recipe-adjust-servings__original-serving").string
 
             # set a global recipe_ingredients variable that other functions can call within their local scope
             global my_recipe_ingredients
 
             # create a recipe_ingredients variable and use .find() method to locate the ingredients info of the recipe by analyzing tag and attribute elements. Store the result into ingredients
-            my_recipe_ingredients = recipe_doc.find(
-                "fieldset", class_="ingredients-section__fieldset").text
+            my_recipe_ingredients = recipe_doc.find("fieldset", class_="ingredients-section__fieldset").text
 
             # ln 84 to 92 cleans up the output by removing unnecessary whitespace from raw website output
 
-            my_recipe_ingredients = my_recipe_ingredients.split(
-                '         ') and my_recipe_ingredients.split(
-                    '      ') and my_recipe_ingredients.split(
-                        ' ') and my_recipe_ingredients.split('   ')
+            my_recipe_ingredients = my_recipe_ingredients.split('         ') and my_recipe_ingredients.split('      ') and my_recipe_ingredients.split(' ') and my_recipe_ingredients.split('   ')
 
             update_ingredients = []
 
@@ -326,8 +303,7 @@ def find_recipe():
             my_recipe_ingredients = update_ingredients
 
             # create an instructions variable and use .find() method to locate the instructions info of the recipe by analyzing tag and attribute elements. Store the result into instructions
-            instructions = recipe_doc.find(
-                "fieldset", class_="instructions-section__fieldset").text
+            instructions = recipe_doc.find("fieldset", class_="instructions-section__fieldset").text
 
             # ln 102 to 117 cleans up the output by removing unnecessary whitespace from raw website output
 
@@ -364,6 +340,7 @@ def find_recipe():
             for ingredient in my_recipe_ingredients:
                 print(ingredient)
                 print()
+            
             print()
 
             # print instructions as individual elements on their own line to console
@@ -426,9 +403,8 @@ def save_ingredients():
     while True:
 
         # ask user if they would like to save recipe ingredients and store into my_shopping_list list variable
-        save_ingredient = input(
-            "Would you like to save the recipe ingredients to your shopping list? Enter yes or no: \n> "
-        ).lower().strip()
+        save_ingredient = input("Would you like to save the recipe ingredients to your shopping list? Enter yes or no: \n> ").lower().strip()
+        
         print()
 
         # if no then break
@@ -464,6 +440,7 @@ def save_ingredients():
             # let user know input was not an option
             print("Sorry, that wasn't an option. Try again.")
             print()
+    
     print()
 
 
@@ -488,9 +465,7 @@ def save_recipe():
     while True:
 
         # ask user if they want to save recipe for later
-        save_recipe = input(
-            "Would you like to save this recipe for later? Enter yes or no: \n> "
-        ).lower().strip()
+        save_recipe = input("Would you like to save this recipe for later? Enter yes or no: \n> ").lower().strip()
         print()
 
         # if no - break
@@ -515,9 +490,7 @@ def save_recipe():
             if found == False:
                 my_recipes[my_recipe_title.strip()] = my_recipe_link.strip()
 
-                print(
-                    f"\U0001F389 Success: {my_recipe_title.strip().upper()} saved to your recipes."
-                )
+                print(f"\U0001F389 Success: {my_recipe_title.strip().upper()} saved to your recipes.")
                 print()
 
                 # call the write_recipe() function
@@ -563,8 +536,7 @@ def main():
     while True:
 
         # call the select_menu() function to display menu options and ask user for menu selection input; return function results into my_select_menu variable
-        my_select_menu = select_menu(
-        )  # sets my_selection variable to whatever was stored in return value when select_menu() function was called
+        my_select_menu = select_menu()  # sets my_selection variable to whatever was stored in return value when select_menu() function was called
 
         if my_select_menu == "q" or my_select_menu == "quit":
             say_goodbye()
